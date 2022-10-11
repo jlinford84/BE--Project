@@ -14,6 +14,7 @@ describe("1 GET categories /api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body }) => {
+        expect(body.length !== 0)
         expect(
           body.forEach((category) => {
             expect(category).toEqual(
@@ -34,6 +35,7 @@ describe("2 GET reviews by id /api/reviews/:review_id", () => {
       .get("/api/reviews")
       .expect(200)
       .then(({ body }) => {
+        expect(body.length !== 0)
         expect(
           body.forEach((category) => {
             expect(category).toEqual(
@@ -59,8 +61,9 @@ describe("2 GET reviews by id /api/reviews/:review_id", () => {
       .get(`/api/reviews/${review_id}`)
       .expect(200)
       .then(({ body }) => {
+        expect(body.length !== 0)
         expect(body).toEqual({
-          review: [
+          review: 
             {
               category: "euro game",
               created_at: "2021-01-18T10:00:20.514Z",
@@ -73,8 +76,28 @@ describe("2 GET reviews by id /api/reviews/:review_id", () => {
               title: "Agricola",
               votes: 1,
             },
-          ],
+          
         });
+      });
+  });
+  it("status 404, should return an error", () => {
+    const review_id = 1000;
+    return request(app)
+      .get(`/api/reviews/${review_id}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.length === 0)
+        expect(body).toEqual({"msg": "No review found for review_id:1000"});
+      });
+  });
+  it("status 400, should return an error", () => {
+    const review_id = 'banana';
+    return request(app)
+      .get(`/api/reviews/${review_id}`)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.length === 0)
+        expect(body).toEqual({"msg": "invalid id type"});
       });
   });
 });
