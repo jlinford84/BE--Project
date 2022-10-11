@@ -14,7 +14,7 @@ describe("1 GET categories /api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body }) => {
-        expect(body.length !== 0)
+        expect(body.length).toEqual(4);
         expect(
           body.forEach((category) => {
             expect(category).toEqual(
@@ -35,7 +35,7 @@ describe("2 GET reviews by id /api/reviews/:review_id", () => {
       .get("/api/reviews")
       .expect(200)
       .then(({ body }) => {
-        expect(body.length !== 0)
+        expect(body.length).toEqual(13);
         expect(
           body.forEach((category) => {
             expect(category).toEqual(
@@ -61,22 +61,20 @@ describe("2 GET reviews by id /api/reviews/:review_id", () => {
       .get(`/api/reviews/${review_id}`)
       .expect(200)
       .then(({ body }) => {
-        expect(body.length !== 0)
+        expect([body].length).toEqual(1);
         expect(body).toEqual({
-          review: 
-            {
-              category: "euro game",
-              created_at: "2021-01-18T10:00:20.514Z",
-              designer: "Uwe Rosenberg",
-              owner: "mallionaire",
-              review_body: "Farmyard fun!",
-              review_id: 1,
-              review_img_url:
-                "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-              title: "Agricola",
-              votes: 1,
-            },
-          
+          review: {
+            category: "euro game",
+            created_at: "2021-01-18T10:00:20.514Z",
+            designer: "Uwe Rosenberg",
+            owner: "mallionaire",
+            review_body: "Farmyard fun!",
+            review_id: 1,
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            title: "Agricola",
+            votes: 1,
+          },
         });
       });
   });
@@ -86,18 +84,45 @@ describe("2 GET reviews by id /api/reviews/:review_id", () => {
       .get(`/api/reviews/${review_id}`)
       .expect(404)
       .then(({ body }) => {
-        expect(body.length === 0)
-        expect(body).toEqual({"msg": "No review found for review_id:1000"});
+        expect(body).toEqual({ msg: "No review found for review_id:1000" });
       });
   });
   it("status 400, should return an error", () => {
-    const review_id = 'banana';
+    const review_id = "banana";
     return request(app)
       .get(`/api/reviews/${review_id}`)
       .expect(400)
       .then(({ body }) => {
-        expect(body.length === 0)
-        expect(body).toEqual({"msg": "invalid id type"});
+        expect(body).toEqual({ msg: "invalid id type" });
+      });
+  });
+});
+describe("3 GET users /api/users", () => {
+  it("status 200, should confirm a return of categories containing a description and a slug", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toEqual(4);
+        expect(
+          body.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({
+                avatar_url: expect.any(String),
+                name: expect.any(String),
+                username: expect.any(String),
+              })
+            );
+          })
+        );
+      });
+  });
+  it("status 404, should ", () => {
+    return request(app)
+      .get("/api/banana")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({});
       });
   });
 });
