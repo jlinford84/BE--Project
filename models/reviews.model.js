@@ -14,6 +14,13 @@ LEFT JOIN comments ON comments.review_id = reviews.review_id`;
   GROUP BY reviews.review_id
   ORDER BY ${sortBy} ${order};`;
   return db.query(baseQuery, query).then(({ rows }) => {
+    const review = rows[0];
+      if (!review) {
+        return Promise.reject({
+          status: 404,
+          msg: `No review found for review_id:${id}`,
+        });
+      }
     return rows;
   });
 };

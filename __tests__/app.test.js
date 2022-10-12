@@ -126,7 +126,7 @@ describe("6 PATCH /api/reviews/:review_id", () => {
         expect(body).toEqual({ msg: "No review found for review_id:999" });
       });
   });
-  
+
   it("status 400, should return an error", () => {
     const review_id = "pear";
     return request(app)
@@ -147,11 +147,9 @@ describe("7. GET /api/reviews/review_id/comments", () => {
         expect(body.review.comment_count).toEqual(3);
       });
   });
-  
+
   it("status 404, should return an error", () => {
-    return request(app)
-      .patch(`/api/reviews/1/condiments`)
-      .expect(404)
+    return request(app).patch(`/api/reviews/1/condiments`).expect(404);
   });
 });
 
@@ -181,9 +179,32 @@ describe("8. GET /api/reviews", () => {
         );
       });
   });
-  it("status 404, should return an error", () => {
+  it('should accept a category query', () => {
     return request(app)
-      .patch(`/api/renews`)
-      .expect(404)
+      .get("/api/reviews?category=owner")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toEqual(13);
+        expect(
+          body.forEach((review) => {
+            expect(review).toEqual(
+              expect.objectContaining({
+                category: expect.any(String),
+                comment_count: expect.any(Number),
+                created_at: expect.any(String),
+                designer: expect.any(String),
+                owner: expect.any(String),
+                review_id: expect.any(Number),
+                review_img_url: expect.any(String),
+                title: expect.any(String),
+                votes: expect.any(Number),
+              })
+            );
+          })
+        );
+      });
+  });
+  it("status 404, should return an error", () => {
+    return request(app).patch(`/api/renews`).expect(404);
   });
 });
