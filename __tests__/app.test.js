@@ -36,7 +36,8 @@ describe("4 GET reviews by id /api/reviews/:review_id", () => {
       .get(`/api/reviews/${review_id}`)
       .expect(200)
       .then(({ body }) => {
-        expect([body].length).toEqual(1);
+        expect([body].length).toBe(1);
+        expect(body.review.review_id).toBe(1)
         expect(body.review).toEqual(
           expect.objectContaining({
             category: expect.any(String),
@@ -128,9 +129,9 @@ describe("6 PATCH /api/reviews/:review_id", () => {
   });
 
   it("status 400, should return an error", () => {
-    const review_id = "pear";
     return request(app)
-      .patch(`/api/reviews/${review_id}`)
+      .patch(`/api/reviews/1`)
+      .send({inc_votes: 'banana'})
       .expect(400)
       .then(({ body }) => {
         expect(body).toEqual({ msg: "invalid type" });
@@ -185,11 +186,8 @@ describe("8. GET /api/reviews", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.length).toEqual(13);
-        console.log(body)
         expect(body[0].owner).toBe('mallionaire')
           })
-        
-    
   });
   it("status 404, should return an error", () => {
     return request(app).patch(`/api/renews`).expect(404);
