@@ -8,7 +8,7 @@ beforeEach(() => seed(testData));
 
 afterAll(() => db.end());
 
-describe("1 GET categories /api/categories", () => {
+describe("3 GET categories /api/categories", () => {
   it("status 200, should confirm a return of categories containing a description and a slug", () => {
     return request(app)
       .get("/api/categories")
@@ -29,7 +29,7 @@ describe("1 GET categories /api/categories", () => {
   });
 });
 
-describe("2 GET reviews by id /api/reviews/:review_id", () => {
+describe("4 GET reviews by id /api/reviews/:review_id", () => {
   it("status 200, should confirm a return of reviews containing all categories", () => {
     return request(app)
       .get("/api/reviews")
@@ -65,6 +65,7 @@ describe("2 GET reviews by id /api/reviews/:review_id", () => {
         expect(body).toEqual({
           review: {
             category: "euro game",
+            comment_count: 0,
             created_at: "2021-01-18T10:00:20.514Z",
             designer: "Uwe Rosenberg",
             owner: "mallionaire",
@@ -93,11 +94,11 @@ describe("2 GET reviews by id /api/reviews/:review_id", () => {
       .get(`/api/reviews/${review_id}`)
       .expect(400)
       .then(({ body }) => {
-        expect(body).toEqual({ msg: "invalid id type" });
+        expect(body).toEqual({ msg: "invalid type" });
       });
   });
 });
-describe("3 GET users /api/users", () => {
+describe("5 GET users /api/users", () => {
   it("status 200, should confirm a return of categories containing a description and a slug", () => {
     return request(app)
       .get("/api/users")
@@ -119,10 +120,58 @@ describe("3 GET users /api/users", () => {
   });
   it("status 404, should ", () => {
     return request(app)
-      .get("/api/banana")
+      .get("/api/apple")
+      .expect(404)
+  });
+});
+
+describe('6 PATCH /api/reviews/:review_id', () => {
+  it('status 200, should add a number of votes to the selected review', () => {
+    return request(app)
+      .patch("/api/reviews/1")
+      .expect(200)
+      .send({ inc_votes: 3})
+      .then(({ body }) => {
+        expect(body.review[0]).toEqual({
+          review_id: 1,
+          title: 'Agricola',
+          category: 'euro game',
+          designer: 'Uwe Rosenberg',
+          owner: 'mallionaire',
+          review_body: 'Farmyard fun!',
+          review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+          created_at: '2021-01-18T10:00:20.514Z',
+          votes: 4
+        });
+      });
+  });
+  it("status 404, should return an error", () => {
+    const review_id = 999;
+    return request(app)
+      .get(`/api/reviews/${review_id}`)
       .expect(404)
       .then(({ body }) => {
-        expect(body).toEqual({});
+        expect(body).toEqual({ msg: "No review found for review_id:999" });
       });
+  });
+  it("status 400, should return an error", () => {
+    const review_id = "pear";
+    return request(app)
+      .get(`/api/reviews/${review_id}`)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "invalid type" });
+      });
+  });
+});
+
+describe('7. GET /api/reviews/review_id/comments', () => {
+  it('status 200, should return the comment count for a selected review', () => {
+    return request(app)
+    .get('/api/reviews/3')
+    .expect(200)
+    .then(({ body }) => {
+      expect(body.review.comment_count).toEqual(3)
+    })
   });
 });
