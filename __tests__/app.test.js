@@ -185,24 +185,11 @@ describe("8. GET /api/reviews", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.length).toEqual(13);
-        expect(
-          body.forEach((review) => {
-            expect(review).toEqual(
-              expect.objectContaining({
-                category: expect.any(String),
-                comment_count: expect.any(Number),
-                created_at: expect.any(String),
-                designer: expect.any(String),
-                owner: expect.any(String),
-                review_id: expect.any(Number),
-                review_img_url: expect.any(String),
-                title: expect.any(String),
-                votes: expect.any(Number),
-              })
-            );
+        console.log(body)
+        expect(body[0].owner).toBe('mallionaire')
           })
-        );
-      });
+        
+    
   });
   it("status 404, should return an error", () => {
     return request(app).patch(`/api/renews`).expect(404);
