@@ -61,3 +61,19 @@ exports.updateReviewById = (newVotes, id) => {
     return rows
   })
 }
+
+exports.selectReviewComments = (id) => {
+  return db
+  .query(
+    `SELECT * FROM comments WHERE comments.review_id = $1;`, [id])
+  .then(({ rows }) => {
+    const comments = rows;
+    if (!comments) {
+      return Promise.reject({
+        status: 404,
+        msg: `No review found for review_id:${id}`,
+      });
+    } 
+    return comments;
+  });
+}
