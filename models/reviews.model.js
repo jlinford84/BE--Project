@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-exports.selectReviews = (sortBy = "created_at", order = "DESC", category) => {
+exports.selectReviews = (sort_by = "created_at", order = "DESC", category) => {
   let baseQuery = `
   SELECT reviews.*, COUNT(comments.review_id) ::INT AS comment_count
 FROM reviews
@@ -12,9 +12,10 @@ LEFT JOIN comments ON comments.review_id = reviews.review_id`;
   }
   baseQuery += `
   GROUP BY reviews.review_id
-  ORDER BY ${sortBy} ${order};`;
+  ORDER BY ${sort_by} ${order};`;
+  console.log(baseQuery)
   return db.query(baseQuery, query).then(({ rows }) => {
-    const review = rows[0];
+    const review = rows;
       if (!review) {
         return Promise.reject({
           status: 404,

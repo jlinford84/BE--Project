@@ -233,3 +233,15 @@ describe("9. GET /api/reviews/:review_id/comments", () => {
   });
 });
  
+describe('11. GET /api/reviews (queries)', () => {
+  it.only('should accept a query to sort by title and return items in order ', () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toEqual(13);
+        console.log(body[0])
+        expect(body[0].owner).toBe('x')
+          })
+  });
+});
