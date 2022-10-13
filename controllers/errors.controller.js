@@ -1,7 +1,12 @@
 function handlePSQLErrors(err, req, res, next) {
     if(err.code === '22P02') {
       res.status(400).send({ msg: 'invalid type'})
-    } else {
+    } if (err.code === '23503' || '23502') {
+      res.status(404).send({msg: 'not found'})
+    // } if (err.code === 23502) {
+    //   res.status(404).send({msg: not found})
+    }
+      else {
       next(err)
     }
   }
@@ -15,7 +20,7 @@ function handleCustomErrors(err, req, res, next) {
   }
 
 function handleInternalErrors(err, req, res, next) {
-    console.log(err);
+    // console.log(err);
     res.sendStatus(500).send({ msg: "Server issue" });
   }
 
