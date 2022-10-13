@@ -193,3 +193,43 @@ describe("8. GET /api/reviews", () => {
     return request(app).patch(`/api/renews`).expect(404);
   });
 });
+
+describe("9. GET /api/reviews/:review_id/comments", () => {
+  it('should return all comments with the corresponding reviews containing all appropriate data', () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comment.length).toEqual(3);
+        expect(
+          body.comment.forEach((comment) => {
+            expect(comment).toEqual(
+              expect.objectContaining({
+                author: expect.any(String),
+                body: expect.any(String),
+                comment_id: expect.any(Number),
+                created_at: expect.any(String),
+                review_id: expect.any(Number),
+                votes: expect.any(Number),
+              })
+            );
+          })
+        );
+      });
+  });
+  it("status 404, should return an error when an inappropriate search term is used", () => {
+    return request(app)
+      .get(`/api/reviews/1/1`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+
+  it("status 400, should return an error when an inappropriate search term is used", () => {
+    return request(app)
+      .get(`/api/reviews/1/figs`)
+      .expect(404)
+  });
+});
+ 

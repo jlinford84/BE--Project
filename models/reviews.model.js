@@ -61,3 +61,13 @@ exports.updateReviewById = (newVotes, id) => {
     return rows
   })
 }
+
+exports.selectReviewComments = (id) => {
+  return db
+  .query(
+    `SELECT * FROM comments WHERE comments.review_id = $1;`, [id])
+  .then(({ rows }) => {
+    const comments = rows;
+    return comments;
+  });
+}
