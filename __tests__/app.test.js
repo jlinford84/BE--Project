@@ -37,7 +37,7 @@ describe("4 GET reviews by id /api/reviews/:review_id", () => {
       .expect(200)
       .then(({ body }) => {
         expect([body].length).toBe(1);
-        expect(body.review.review_id).toBe(1);
+        expect(body.review.review_id).toBe(1)
         expect(body.review).toEqual(
           expect.objectContaining({
             category: expect.any(String),
@@ -131,7 +131,7 @@ describe("6 PATCH /api/reviews/:review_id", () => {
   it("status 400, should return an error", () => {
     return request(app)
       .patch(`/api/reviews/1`)
-      .send({ inc_votes: "banana" })
+      .send({inc_votes: 'banana'})
       .expect(400)
       .then(({ body }) => {
         expect(body).toEqual({ msg: "invalid type" });
@@ -180,14 +180,14 @@ describe("8. GET /api/reviews", () => {
         );
       });
   });
-  it("should accept a category query", () => {
+  it('should accept a category query', () => {
     return request(app)
       .get("/api/reviews?category=owner")
       .expect(200)
       .then(({ body }) => {
         expect(body.length).toEqual(13);
-        expect(body[0].owner).toBe("mallionaire");
-      });
+        expect(body[0].owner).toBe('mallionaire')
+          })
   });
   it("status 404, should return an error", () => {
     return request(app).patch(`/api/renews`).expect(404);
@@ -195,15 +195,15 @@ describe("8. GET /api/reviews", () => {
 });
 
 describe("9. GET /api/reviews/:review_id/comments", () => {
-  it("should ", () => {
+  it('should return all comments with the corresponding reviews containing all appropriate data', () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
       .then(({ body }) => {
-        expect(body.review.length).toEqual(3);
+        expect(body.comment.length).toEqual(3);
         expect(
-          body.review.forEach((review) => {
-            expect(review).toEqual(
+          body.comment.forEach((comment) => {
+            expect(comment).toEqual(
               expect.objectContaining({
                 author: expect.any(String),
                 body: expect.any(String),
@@ -217,10 +217,19 @@ describe("9. GET /api/reviews/:review_id/comments", () => {
         );
       });
   });
-  it("status 404, should return an error", () => {
-    return request(app).get(`/api/reviews/1/1`).expect(404);
+  it("status 404, should return an error when an inappropriate search term is used", () => {
+    return request(app)
+      .get(`/api/reviews/1/1`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
   });
-  it("status 404, should return an error", () => {
-    return request(app).get(`/api/reviews/1/figs`).expect(404);
+
+  it("status 400, should return an error when an inappropriate search term is used", () => {
+    return request(app)
+      .get(`/api/reviews/1/figs`)
+      .expect(404)
   });
 });
+ 
