@@ -335,7 +335,7 @@ describe("11. GET /api/reviews (queries)", () => {
         expect(body[0].votes).toBe(1);
       });
   });
-  it("should accept a query to sort by votes and return items in ASC order ", () => {
+  it("should return a 404 error as tomato is not a valid query ", () => {
     return request(app).get("/api/reviews?sort_by=tomato").expect(404);
   });
 });
