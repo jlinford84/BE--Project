@@ -67,3 +67,17 @@ exports.postReviewComment = (req, res, next) => {
       next(err);
     });
 };
+
+exports.deleteCommentById = (req, res, next) => {
+  const id = req.params.review_id;
+  selectReviewById(id)
+    .then((result) => {
+      return removeCommentById(id)
+    })  
+    .then((comment) => {
+      res.status(204).send({ comment })
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
