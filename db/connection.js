@@ -22,4 +22,4 @@ const config =
 // console.log(process.env.PGDATABASE)
 
 
-module.exports = new Pool();
+module.exports = new Pool(config);
