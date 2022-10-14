@@ -339,3 +339,27 @@ describe("11. GET /api/reviews (queries)", () => {
     return request(app).get("/api/reviews?sort_by=tomato").expect(404);
   });
 });
+
+describe('12. DELETE /api/comments/:comment_id', () => {
+  test('status:204, responds with an empty response body', () => {
+    return request(app)
+    .delete('/api/comments/4')
+    .expect(204)
+    .then(({ body}) => {
+      expect(body).toEqual({})  
+    })
+  });
+  test('status:404, responds with a 404 error as there is no comment id for 500', () => {
+    return request(app)
+    .delete('/api/comments/500')
+    .expect(404)
+  });
+  test('status:400, responds with an invalid type error as plum is not a number', () => {
+    return request(app)
+    .delete('/api/comments/plum')
+    .expect(400)
+    .then(({ body}) => {
+      expect(body).toEqual({"msg": "invalid type"})  
+    })
+  });
+});

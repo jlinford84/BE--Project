@@ -8,6 +8,7 @@ const {
   postReviewComment,
 } = require("./controllers/reviews.controller");
 const { getUsers } = require("./controllers/users.controller");
+const { deleteCommentById } = require('./controllers/comments.controller')
 
 const {
   handlePSQLErrors,
@@ -27,6 +28,8 @@ app.get("/api/reviews/:review_id/comments", getReviewComments);
 app.post("/api/reviews/:review_id/comments", postReviewComment);
 
 app.patch("/api/reviews/:review_id", patchReviewById);
+
+app.delete('/api/comments/:comment_id', deleteCommentById);
 
 app.use(handlePSQLErrors);
 
