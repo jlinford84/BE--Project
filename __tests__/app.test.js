@@ -267,7 +267,10 @@ describe("10. POST /api/reviews/:review_id/comments", () => {
     return request(app)
       .post("/api/reviews/2000/comments")
       .send(newComment)
-      .expect(404);
+      .expect(404)
+      .then(({ body}) => {
+        expect(body).toEqual({"msg": "not found"})  
+      });
   });
   it("status 404, should return an error when an inappropriate username is used", () => {
     const newComment = {
@@ -277,7 +280,10 @@ describe("10. POST /api/reviews/:review_id/comments", () => {
     return request(app)
       .post("/api/reviews/2/comments")
       .send(newComment)
-      .expect(404);
+      .expect(404)
+      .then(({ body}) => {
+        expect(body).toEqual({"msg": "not found"})  
+      });
   });
   it("status 404, should return an error when no body is added", () => {
     const newComment = {
@@ -286,7 +292,10 @@ describe("10. POST /api/reviews/:review_id/comments", () => {
     return request(app)
       .post("/api/reviews/2/comments")
       .send(newComment)
-      .expect(404);
+      .expect(404)
+      .then(({ body}) => {
+        expect(body).toEqual({"msg": "not found"})  
+      })
   });
 });
 describe("11. GET /api/reviews (queries)", () => {
@@ -336,7 +345,12 @@ describe("11. GET /api/reviews (queries)", () => {
       });
   });
   it("should return a 404 error as tomato is not a valid query ", () => {
-    return request(app).get("/api/reviews?sort_by=tomato").expect(404);
+    return request(app)
+      .get("/api/reviews?sort_by=tomato")
+      .expect(404)
+      .then(({ body}) => {
+        expect(body).toEqual({"msg": "not found"})  
+      })
   });
 });
 
@@ -345,7 +359,7 @@ describe('12. DELETE /api/comments/:comment_id', () => {
     return request(app)
     .delete('/api/comments/4')
     .expect(204)
-    .then(({ body}) => {
+    .then(({ body }) => {
       expect(body).toEqual({})  
     })
   });
@@ -353,6 +367,9 @@ describe('12. DELETE /api/comments/:comment_id', () => {
     return request(app)
     .delete('/api/comments/500')
     .expect(404)
+    .then(({ body }) => {
+      expect(body).toEqual({msg: 'not found'}) 
+    })
   });
   test('status:400, responds with an invalid type error as plum is not a number', () => {
     return request(app)
