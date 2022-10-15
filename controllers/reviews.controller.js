@@ -5,6 +5,11 @@ const {
   selectReviewComments,
   insertReviewComment,
 } = require("../models/reviews.model");
+const endpoints = require('../endpoints.json');
+
+exports.getAPI = (req, res, next) => {
+  res.status(200).send(endpoints)
+}
 
 exports.getReviews = (req, res, next) => {
   const sort_by = req.query.sort_by;

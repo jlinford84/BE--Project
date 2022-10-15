@@ -1,5 +1,6 @@
 {
-  "GET /api": {
+  "welcome": { "msg": "API is live" },
+  "GET_/api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
   "GET /api/categories": {
@@ -80,6 +81,24 @@
         }
       ]
     }
+  },
+  "GET /api/users": {
+    "description": "serves data for all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "bainesface",
+          "name": "sarah",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment and confirms internal that comment is deleted. returns nothing to ui",
+    "queries": [],
+    "exampleResponse": "N/A"
   }
-
 }
+

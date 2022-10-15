@@ -380,3 +380,14 @@ describe('12. DELETE /api/comments/:comment_id', () => {
     })
   });
 });
+
+describe('Name of the group', () => {
+  it('should ', () => {
+    return request(app)
+    .get('/api')
+    .expect(200)
+      .then((res) => {
+        expect(JSON.parse(res.text).welcome).toEqual({ msg: 'API is live'})
+      })
+  });
+});
