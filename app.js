@@ -1,3 +1,7 @@
+const cors = require('cors')
+app.use(cors());
+
+
 const express = require("express");
 const { getCategories } = require("./controllers/categories.controller");
 const {
